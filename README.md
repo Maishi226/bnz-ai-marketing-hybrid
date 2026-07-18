@@ -1,5 +1,17 @@
 # BNZ AI Marketing Acceleration Hybrid Demo
 
+## Required Repositories
+
+This demo is split into two repositories:
+
+1. [bank-segmentation-service](https://github.com/Maishi226/bank-segmentation-service)  
+   Runs the ML behavioural customer segmentation API on `http://127.0.0.1:8000`.
+
+2. [bnz-ai-marketing-hybrid](https://github.com/Maishi226/bnz-ai-marketing-hybrid)  
+   Runs the frontend, hybrid FastAPI backend, Amazon Bedrock ad generation, and AI assistant.
+
+You must start `bank-segmentation-service` first, then start this project.
+
 This project is a local hybrid demo for Challenge 2: AI-powered personalised marketing and accelerated delivery.
 
 It connects four parts:
