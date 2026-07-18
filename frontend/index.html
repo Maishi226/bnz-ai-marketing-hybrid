@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BNZ AI Marketing Acceleration Demo</title>
+  <style>
+    :root {
+      --bnz: #004b93;
+      --ink: #142033;
+      --muted: #64748b;
+      --line: #d7e1ee;
+      --paper: #f5f7fb;
+      --white: #fff;
+      --green: #12805c;
+      --amber: #a26300;
+      --red: #b42318;
+      --radius: 8px;
+      --shadow: 0 18px 45px rgba(20, 32, 51, .12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    button, textarea, select, input { font: inherit; }
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .brand { display: flex; gap: 12px; align-items: center; }
+    .logo {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 7px;
+      color: #fff;
+      background: var(--bnz);
+      font-weight: 900;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 18px; line-height: 1.2; }
+    .sub { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .status { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      min-height: 30px;
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 999px; background: var(--green); }
+    .dot.warn { background: var(--amber); }
+    main {
+      display: grid;
+      grid-template-columns: 380px minmax(0, 1fr) 380px;
+      gap: 16px;
+      padding: 16px;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px rgba(20, 32, 51, .06);
+      min-width: 0;
+    }
+    .head {
+      padding: 14px 15px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .head h2 { font-size: 15px; }
+    .body { padding: 15px; }
+    .stack { display: grid; gap: 12px; }
+    textarea, input {
+      width: 100%;
+      border: 1px solid #c7d2e2;
+      border-radius: var(--radius);
+      padding: 12px;
+      line-height: 1.45;
+      color: var(--ink);
+      background: #fff;
+    }
+    textarea { min-height: 92px; resize: vertical; }
+    #product { min-height: 118px; }
+    label { display: grid; gap: 6px; color: var(--muted); font-size: 12px; }
+    .primary, .secondary {
+      min-height: 42px;
+      border-radius: var(--radius);
+      padding: 0 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .primary { border: 0; background: var(--bnz); color: #fff; }
+    .secondary { border: 1px solid var(--line); background: #fff; color: var(--ink); }
+    .audience { display: grid; gap: 10px; max-height: calc(100vh - 470px); overflow: auto; padding-right: 4px; }
+    .segment-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: grid;
+      gap: 9px;
+      cursor: pointer;
+      background: #fff;
+    }
+    .segment-card.active { border-color: var(--bnz); box-shadow: inset 3px 0 0 var(--bnz); background: #f7fbff; }
+    .row { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    .name { font-weight: 850; font-size: 14px; }
+    .small { color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .score { color: var(--green); font-weight: 850; font-size: 13px; white-space: nowrap; }
+    .tagline { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tag { background: #edf3f8; color: #334155; border-radius: 999px; padding: 5px 8px; font-size: 11px; font-weight: 750; }
+    .tag.blue { background: #e7f0fb; color: var(--bnz); }
+    .tag.green { background: #e6f5ef; color: var(--green); }
+    .tag.amber { background: #fff3d6; color: var(--amber); }
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-bottom: 1px solid var(--line);
+    }
+    .step { padding: 13px 15px; border-right: 1px solid var(--line); display: grid; gap: 5px; min-height: 78px; }
+    .step:last-child { border-right: 0; }
+    .step b { font-size: 13px; }
+    .step span { color: var(--muted); font-size: 12px; line-height: 1.35; }
+    .result-wrap { padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 16px; }
+    .creative {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: linear-gradient(135deg, #fff, #eef6ff);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 15px;
+      align-content: start;
+    }
+    .headline { font-size: 23px; line-height: 1.2; font-weight: 900; }
+    .copy { color: #26384f; font-size: 15px; line-height: 1.55; }
+    .insight { border: 1px solid var(--line); background: #fff; border-radius: var(--radius); padding: 12px; display: grid; gap: 8px; }
+    .insight h3 { font-size: 13px; display: flex; justify-content: space-between; gap: 10px; }
+    .customers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .customer { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius); padding: 9px; min-height: 64px; }
+    .customer b { display: block; font-size: 12px; margin-bottom: 3px; }
+    .phone { border: 1px solid #cbd5e1; border-radius: 24px; background: #101827; padding: 10px; max-width: 350px; width: 100%; margin: 0 auto; }
+    .screen { min-height: 560px; border-radius: 18px; background: #f8fafc; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; }
+    .appbar { background: var(--bnz); color: #fff; padding: 15px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 850; }
+    .offer { margin: 14px; padding: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: grid; gap: 11px; }
+    .amount { font-size: 22px; font-weight: 950; color: var(--bnz); line-height: 1.2; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .metric { background: #f1f5f9; border-radius: var(--radius); padding: 9px; min-height: 61px; }
+    .metric b { display: block; font-size: 12px; margin-bottom: 4px; }
+    .metric span { color: var(--muted); font-size: 11px; line-height: 1.25; }
+    .chat { margin: 0 14px 14px; display: grid; gap: 8px; align-content: end; }
+    .bubble { max-width: 88%; border-radius: 15px; padding: 10px 12px; font-size: 12px; line-height: 1.4; }
+    .bot { background: #fff; border: 1px solid var(--line); }
+    .user { justify-self: end; background: var(--bnz); color: #fff; }
+    .actions { display: grid; gap: 8px; padding: 12px 14px 14px; background: #fff; border-top: 1px solid var(--line); }
+    .ask-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+    .flow { display: grid; gap: 10px; }
+    .flow-item { display: grid; grid-template-columns: 30px 1fr; gap: 10px; }
+    .num { width: 26px; height: 26px; border-radius: 50%; background: var(--bnz); color: #fff; display: grid; place-items: center; font-weight: 850; font-size: 12px; }
+    .flow-text { border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+    .flow-text b { display: block; font-size: 13px; margin-bottom: 3px; }
+    .flow-text span { color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .loading { opacity: .65; pointer-events: none; }
+    .error { color: var(--red); font-size: 12px; line-height: 1.45; }
+    .evidence-grid { display: grid; gap: 9px; }
+    .evidence-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px; background: #f8fafc; display: grid; gap: 6px; }
+    .evidence-card b { font-size: 12px; }
+    .evidence-card code { word-break: break-word; }
+    .feature-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .feature-list span { border-radius: 999px; background: #edf3f8; color: #334155; padding: 4px 7px; font-size: 10px; font-weight: 700; }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
+    @media (max-width: 1220px) {
+      main { grid-template-columns: 360px minmax(0, 1fr); }
+      .rail { grid-column: 1 / -1; }
+      .rail .body { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    }
+    @media (max-width: 900px) {
+      header { flex-direction: column; align-items: flex-start; }
+      main { grid-template-columns: 1fr; padding: 12px; }
+      .result-wrap, .rail .body { grid-template-columns: 1fr; }
+      .pipeline { grid-template-columns: 1fr 1fr; }
+      .audience { max-height: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">BNZ</div>
+      <div>
+        <h1>AI Marketing Acceleration Demo</h1>
+        <p class="sub">Type any product. ML selects the audience. Bedrock writes the personalised ads. The assistant answers questions.</p>
+      </div>
+    </div>
+    <div class="status" id="status">
+      <span class="pill"><span class="dot warn"></span>Checking backend</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel">
+      <div class="head"><h2>Campaign Input</h2><span class="pill">No preset products</span></div>
+      <div class="body stack">
+        <label>Product or offer typed by the bank employee
+          <textarea id="product">A 10,000 NZD low-interest personal loan for customers who may need short-term funding, with repayment estimates shown in the BNZ app before they apply.</textarea>
+        </label>
+        <label>Optional campaign brief
+          <textarea id="brief">Create different messages for each ML behavioural segment. Make the offer feel relevant without using identity labels.</textarea>
+        </label>
+        <label>Objective
+          <input id="objective" value="generate personalised compliant marketing and support conversion" />
+        </label>
+        <button class="primary" id="generate">Generate Personalised Ads with Bedrock</button>
+        <p class="small">The audience below is loaded from your ML API, not from hardcoded frontend data.</p>
+        <div class="audience" id="audience"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="pipeline">
+        <div class="step"><b>1. Product Input</b><span>The bank employee can type any product, service, or campaign offer.</span></div>
+        <div class="step"><b>2. ML Segmentation API</b><span>The backend calls your <code>/v1/segments</code> and <code>/v1/customers</code> endpoints.</span></div>
+        <div class="step"><b>3. Bedrock Generation</b><span>Bedrock creates different ad copy for each behavioural segment.</span></div>
+        <div class="step"><b>4. AI Assistant</b><span>The customer can ask follow-up questions about the offer.</span></div>
+      </div>
+      <div class="result-wrap">
+        <div class="creative">
+          <div>
+            <p class="small">Selected behavioural segment</p>
+            <div class="headline" id="headline">Waiting for generation</div>
+          </div>
+          <p class="copy" id="message">Click generate to call the ML segmentation API and Bedrock.</p>
+          <div class="insight">
+            <h3>Why this audience receives the ad <span id="confidence">-</span></h3>
+            <p class="small" id="story">The ML service returns behavioural segments and customer IDs.</p>
+          </div>
+          <div class="insight">
+            <h3>Send this ad to these customers <span id="sampleCount">-</span></h3>
+            <div class="customers" id="customers"></div>
+          </div>
+          <div class="insight">
+            <h3>Source and compliance <span id="bedrockStatus">-</span></h3>
+            <p class="small" id="note">No identity labels. No protected attributes. Behavioural targeting only.</p>
+          </div>
+        </div>
+
+        <div class="phone">
+          <div class="screen">
+            <div class="appbar"><span>BNZ App</span><span>AI Assistant</span></div>
+            <div>
+              <div class="offer">
+                <p class="small" id="appNotification">The personalised BNZ message will appear here.</p>
+                <div class="amount" id="phoneProduct">Typed product appears here</div>
+                <p class="copy" id="phoneMessage">The assistant can answer questions after generation.</p>
+                <div class="metrics">
+                  <div class="metric"><b>ML</b><span>Audience selected</span></div>
+                  <div class="metric"><b>Bedrock</b><span>Copy generated</span></div>
+                  <div class="metric"><b>Assistant</b><span>Q&A response</span></div>
+                </div>
+              </div>
+              <div class="chat" id="chat">
+                <div class="bubble bot">Generate a campaign, then ask me a customer question about the selected offer.</div>
+              </div>
+            </div>
+            <div class="actions">
+              <div class="ask-row">
+                <input id="question" value="What would my monthly repayments look like?" />
+                <button class="primary" id="ask">Ask</button>
+              </div>
+              <button class="secondary" id="apply">Continue application</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel rail">
+      <div class="head"><h2>ML Evidence</h2><span class="pill">Not hardcoded</span></div>
+      <div class="body">
+        <div class="insight">
+          <h3>Live segmentation proof <span id="mlSource">loading</span></h3>
+          <p class="small" id="mlSummary">This section is loaded from the hybrid backend, which calls your bank-segmentation-service API.</p>
+        </div>
+        <div class="evidence-grid" id="mlEvidence"></div>
+        <div class="insight">
+          <h3>Presentation line</h3>
+          <p class="small">These are behavioural clusters from our ML service. We are not manually inventing audience groups; the API returns the segment names, counts, confidence, features, and customer IDs.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const API = "http://127.0.0.1:8010";
+    let campaign = [];
+    let selected = null;
+    let currentProduct = "";
+
+    const $ = (id) => document.getElementById(id);
+
+    function fmtPct(value) {
+      if (value === undefined || value === null) return "-";
+      const num = Number(value);
+      return Number.isFinite(num) ? `${Math.round(num * 100)}% confidence` : String(value);
+    }
+
+    function shortProduct(text) {
+      return text.length > 72 ? `${text.slice(0, 72)}...` : text;
+    }
+
+    async function getJson(path, options) {
+      const res = await fetch(API + path, options);
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+
+    async function loadHealth() {
+      try {
+        const health = await getJson("/api/health");
+        $("status").innerHTML = `
+          <span class="pill"><span class="dot"></span>Bedrock: ${health.bedrock_model_id}</span>
+          <span class="pill"><span class="dot ${health.segmentation_ok ? "" : "warn"}"></span>ML API: ${health.segmentation_ok ? "online" : "fallback"}</span>
+          <span class="pill">${health.segmentation_service_url}</span>
+        `;
+      } catch (err) {
+        $("status").innerHTML = `<span class="pill"><span class="dot warn"></span>Backend 8010 is not running</span>`;
+      }
+    }
+
+    async function loadMlEvidence() {
+      try {
+        const data = await getJson("/api/ml-evidence");
+        $("mlSource").textContent = data.source;
+        $("mlSummary").innerHTML = `Service: <code>${data.service}</code><br>Base URL: <code>${data.base_url}</code><br>Algorithm: ${data.algorithm}<br>Selected groups: ${data.selected_k} | Training customers: ${data.training_customer_count}`;
+        const segmentHtml = data.segments.map((s) => `
+          <div class="evidence-card">
+            <div class="row"><b>${s.segment_id}. ${s.segment_name}</b><span class="score">${s.customer_count || 0}</span></div>
+            <div class="small">Label shown: ${s.behavior_label}</div>
+            <div class="small">Avg confidence: ${fmtPct(s.average_confidence)}</div>
+            <div class="small">Sample customer IDs: <code>${s.sample_customer_ids.join(", ")}</code></div>
+          </div>
+        `).join("");
+        const endpointHtml = `<div class="evidence-card"><b>API endpoints used</b><div class="small">${data.endpoints_used.map((e) => `<code>${e}</code>`).join("<br>")}</div></div>`;
+        const featureHtml = `<div class="evidence-card"><b>Behavioural features used by ML</b><div class="feature-list">${data.features_used.map((f) => `<span>${f}</span>`).join("")}</div></div>`;
+        const excludedHtml = `<div class="evidence-card"><b>Identity fields excluded</b><div class="feature-list">${data.identity_fields_excluded.map((f) => `<span>${f}</span>`).join("")}</div></div>`;
+        $("mlEvidence").innerHTML = endpointHtml + segmentHtml + featureHtml + excludedHtml;
+      } catch (err) {
+        $("mlEvidence").innerHTML = `<p class="error">Could not load ML evidence. Confirm backend 8010 and segmentation service 8000 are running.</p>`;
+      }
+    }
+
+    async function loadAudience() {
+      try {
+        const data = await getJson("/api/audience");
+        renderAudience(data.segments);
+      } catch (err) {
+        $("audience").innerHTML = `<p class="error">Could not load the audience. Start the hybrid backend on port 8010.</p>`;
+      }
+    }
+
+    function renderAudience(segments) {
+      $("audience").innerHTML = segments.map((s) => `
+        <div class="segment-card" data-id="${s.segment_id}">
+          <div class="row">
+            <div>
+              <div class="name">${s.behavior_label}</div>
+              <div class="small">${s.segment_name}</div>
+            </div>
+            <div class="score">${s.customer_count || 0}</div>
+          </div>
+          <p class="small">${s.customer_story}</p>
+          <div class="tagline">
+            <span class="tag blue">Behavioural Segment</span>
+            <span class="tag green">${fmtPct(s.average_confidence)}</span>
+            <span class="tag amber">${s.ml_source ? s.ml_source.customers : "ML source"}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderCampaignItem(item) {
+      selected = item;
+      document.querySelectorAll(".segment-card").forEach((node) => {
+        node.classList.toggle("active", Number(node.dataset.id) === item.segment_id);
+      });
+      const c = item.creative;
+      $("headline").textContent = c.headline || item.behavior_label;
+      $("message").textContent = c.message || "Bedrock returned no message.";
+      $("story").textContent = c.send_reason || item.customer_story;
+      $("confidence").textContent = fmtPct(item.average_confidence);
+      $("sampleCount").textContent = `${item.customers.length} shown`;
+      $("customers").innerHTML = item.customers.map((customer) => `
+        <div class="customer"><b>${customer.customer_id}</b><span class="small">${fmtPct(customer.assignment_confidence)}</span></div>
+      `).join("");
+      $("bedrockStatus").textContent = c.bedrock_status || "generated";
+      $("note").textContent = `${c.compliance_note || "Behavioural targeting only."} Source: ${item.delivery.ml_source.customers}`;
+      $("appNotification").textContent = c.app_notification || c.headline;
+      $("phoneProduct").textContent = shortProduct(currentProduct);
+      $("phoneMessage").textContent = c.message || "Review your BNZ option.";
+      $("chat").innerHTML = `
+        <div class="bubble bot">${c.lex_reply || "I can answer questions about this offer."}</div>
+        <div class="bubble user">Which customers receive this?</div>
+        <div class="bubble bot">This ad is routed to customer IDs from ${item.segment_name}, including ${item.delivery.send_to_customer_ids.slice(0, 4).join(", ")}.</div>
+      `;
+    }
+
+    async function generate() {
+      currentProduct = $("product").value.trim();
+      if (!currentProduct) {
+        $("message").innerHTML = `<span class="error">Please type a product or offer first.</span>`;
+        return;
+      }
+      $("generate").classList.add("loading");
+      $("generate").textContent = "Calling ML API and Bedrock...";
+      try {
+        const data = await getJson("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            product: currentProduct,
+            brief: $("brief").value,
+            objective: $("objective").value,
+          })
+        });
+        campaign = data.campaign;
+        renderAudience(campaign);
+        renderCampaignItem(campaign[0]);
+        document.querySelectorAll(".segment-card").forEach((node) => {
+          node.addEventListener("click", () => {
+            const item = campaign.find((entry) => entry.segment_id === Number(node.dataset.id));
+            if (item) renderCampaignItem(item);
+          });
+        });
+      } catch (err) {
+        $("message").innerHTML = `<span class="error">Generation failed: ${err.message}</span>`;
+      } finally {
+        $("generate").classList.remove("loading");
+        $("generate").textContent = "Generate Personalised Ads with Bedrock";
+      }
+    }
+
+    async function askAssistant() {
+      if (!selected) {
+        $("chat").innerHTML += `<div class="bubble bot">Generate a campaign first, then I can answer using the selected product and segment.</div>`;
+        return;
+      }
+      const question = $("question").value.trim();
+      if (!question) return;
+      $("chat").innerHTML += `<div class="bubble user">${question}</div>`;
+      $("ask").classList.add("loading");
+      try {
+        const data = await getJson("/api/assistant", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question,
+            product: currentProduct,
+            segment_name: selected.segment_name,
+            behavior_label: selected.behavior_label,
+            message: selected.creative.message || "",
+            customer_id: selected.customers[0] ? selected.customers[0].customer_id : null,
+          })
+        });
+        $("chat").innerHTML += `<div class="bubble bot">${data.answer}</div>`;
+      } catch (err) {
+        $("chat").innerHTML += `<div class="bubble bot">I could not reach the assistant service. Please check the backend.</div>`;
+      } finally {
+        $("ask").classList.remove("loading");
+      }
+    }
+
+    $("generate").addEventListener("click", generate);
+    $("ask").addEventListener("click", askAssistant);
+    $("question").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") askAssistant();
+    });
+    $("apply").addEventListener("click", () => {
+      $("chat").innerHTML += `<div class="bubble user">Continue application</div><div class="bubble bot">I can move the customer to the next step: amount, purpose, term, and eligibility checks.</div>`;
+    });
+
+    loadHealth();
+    loadAudience();
+    loadMlEvidence();
+  </script>
+</body>
+</html>
