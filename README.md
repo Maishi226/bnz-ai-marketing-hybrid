@@ -1,5 +1,15 @@
 # BNZ AI Marketing Acceleration Hybrid Demo
 
+
+This project is a local hybrid demo for Challenge 2: AI-powered personalised marketing and accelerated delivery.
+
+It connects four parts:
+
+1. A local frontend where a bank employee can type any product or offer.
+2. A local FastAPI backend that orchestrates the workflow.
+3. The existing `bank-segmentation-service` ML API, which returns behavioural customer segments and customer IDs.
+4. Amazon Bedrock, which generates segment-specific ad copy and answers customer questions through an AI assistant flow.
+
 ## Required Repositories
 
 This demo is split into two repositories:
@@ -11,15 +21,6 @@ This demo is split into two repositories:
    Runs the frontend, hybrid FastAPI backend, Amazon Bedrock ad generation, and AI assistant.
 
 You must start `bank-segmentation-service` first, then start this project.
-
-This project is a local hybrid demo for Challenge 2: AI-powered personalised marketing and accelerated delivery.
-
-It connects four parts:
-
-1. A local frontend where a bank employee can type any product or offer.
-2. A local FastAPI backend that orchestrates the workflow.
-3. The existing `bank-segmentation-service` ML API, which returns behavioural customer segments and customer IDs.
-4. Amazon Bedrock, which generates segment-specific ad copy and answers customer questions through an AI assistant flow.
 
 ## Architecture
 
