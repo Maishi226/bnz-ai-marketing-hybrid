@@ -112,7 +112,7 @@ http://127.0.0.1:8010
 First, start the ML segmentation API.
 
 ```bash
-cd bank-segmentation-service
+cd /path/to/bank-segmentation-service
 bash setup_and_run.sh
 ```
 
