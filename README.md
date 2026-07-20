@@ -141,7 +141,7 @@ cp .env.example .env
 Configure your AWS profile:
 
 ```text
-AWS_PROFILE=bnz-demo
+AWS_PROFILE=your-local-aws-profile
 AWS_REGION=ap-southeast-2
 BEDROCK_MODEL_ID=amazon.nova-lite-v1:0
 SEGMENTATION_SERVICE_URL=http://127.0.0.1:8000
